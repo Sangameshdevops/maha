@@ -1,0 +1,36 @@
+kubectl get nodes
+helm repo add jupyterhub https://jupyterhub.github.io/helm-chart/
+helm repo update
+
+openssl rand -hex 32
+d3b0609715b6b22ffcd361db8c6380d5eb18ef13faa99602a6381de6feef1bce
+touch config.yaml
+
+proxy:
+  secretToken: "d3b0609715b6b22ffcd361db8c6380d5eb18ef13faa99602a6381de6feef1bce"
+  
+
+RELEASE=jupyterhub
+NAMESPACE=jhub
+helm upgrade --cleanup-on-fail \
+  --install $RELEASE jupyterhub/jupyterhub \
+  --namespace $NAMESPACE \
+  --create-namespace \
+  --version=0.10.6 \
+  --values config.yaml
+
+ kubectl get services -n jhub
+
+
+
+kubectl get sc
+kubectl patch storageclass default -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+helm repo add portainer https://portainer.github.io/k8s/
+helm repo update
+helm install --create-namespace -n portainer portainer portainer/portainer     --set service.type=LoadBalancer
+kubectl get --namespace portainer svc -w portainer
+kubectl get namespace
+kubectl get po -A
+  
+  
+  
